@@ -1,5 +1,11 @@
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
+
 class Data {
     public static int N = 4;
 
@@ -193,129 +199,3 @@ class Data {
     }
 }
 
-class T1 extends Thread {
-    private final Data data;
-    private double[] A, B;
-    private double[][] MA, MD;
-    private double d;
-
-    public T1(Data data) {
-        super("T1");
-        this.data = data;
-    }
-
-    @Override
-    public void run() {
-        int n = Data.N;
-        if (Data.useKeyboardInput()) {
-            B = Data.fillVectorConstant(n, 1);
-            MA = Data.fillMatrixConstant(n, 1);
-            MD = Data.fillMatrixConstant(n, 1);
-            d = 1;
-        } else {
-            Random rnd = new Random(Thread.currentThread().getId());
-            B = Data.inputVectorLarge(n, 1, rnd);
-            MA = Data.inputMatrixLarge(n, 1, rnd);
-            MD = Data.inputMatrixLarge(n, 1, rnd);
-            d = 1;
-        }
-        double[][] MAMD = Data.matrixMultiply(MA, MD);
-        double[] tmpVec = Data.vectorTimesMatrix(B, MAMD);
-        A = Data.scalarTimesVector(d, tmpVec);
-        System.out.println("T1 (F1 1.10) A = B*(MA*MD)*d: A = " + (n <= 10 ? Arrays.toString(A) : "[" + A[0] + ", ... length=" + n + "]"));
-    }
-}
-
-class T2 extends Thread {
-    private final Data data;
-    private double[][] MF, MG;
-    private double k;
-
-    public T2(Data data) {
-        super("T2");
-        this.data = data;
-    }
-
-    @Override
-    public void run() {
-        int n = Data.N;
-        if (Data.useKeyboardInput()) {
-            MF = Data.fillMatrixConstant(n, 2);
-            MG = Data.fillMatrixConstant(n, 2);
-            k = 2;
-        } else {
-            Random rnd = new Random(Thread.currentThread().getId());
-            MF = Data.inputMatrixLarge(n, 2, rnd);
-            MG = Data.inputMatrixLarge(n, 2, rnd);
-            k = 2;
-        }
-        double[][] MFMG = Data.matrixMultiply(MF, MG);
-        MF = Data.scalarTimesMatrix(k, MFMG);
-        System.out.println("T2 (F2 2.3) MF = MF*MG*k: MF[0][0]=" + MF[0][0] + " ... (N=" + n + "x" + n + ")");
-    }
-}
-
-class T3 extends Thread {
-    private final Data data;
-    private double[] O, S;
-    private double[][] MP, MR;
-
-    public T3(Data data) {
-        super("T3");
-        this.data = data;
-    }
-
-    @Override
-    public void run() {
-        int n = Data.N;
-        if (Data.useKeyboardInput()) {
-            S = Data.fillVectorConstant(n, 3);
-            MP = Data.fillMatrixConstant(n, 3);
-            MR = Data.fillMatrixConstant(n, 3);
-        } else {
-            Random rnd = new Random(Thread.currentThread().getId());
-            S = Data.inputVectorLarge(n, 3, rnd);
-            MP = Data.inputMatrixLarge(n, 3, rnd);
-            MR = Data.inputMatrixLarge(n, 3, rnd);
-        }
-        double[][] MPMR = Data.matrixMultiply(MP, MR);
-        double[][] sorted = Data.sortMatrixRows(MPMR);
-        O = Data.matrixTimesVector(sorted, S);
-        System.out.println("T3 (F3 3.5) O = (SORT(MP*MR))*S: O = " + (n <= 10 ? Arrays.toString(O) : "[" + O[0] + ", ... length=" + n + "]"));
-    }
-}
-
-public class Lab1 {
-    public static void main(String[] args) {
-        if (args.length >= 1) {
-            try {
-                Data.N = Integer.parseInt(args[0]);
-            } catch (NumberFormatException e) {
-                Data.N = 4;
-            }
-        }
-        if (args.length >= 2) {
-            Data.inputModeLarge = args[1];
-        }
-        System.out.println("Lab1: N=" + Data.N + ", inputMode(Large)=" + Data.inputModeLarge);
-
-        Data data = new Data();
-        Thread t1 = new T1(data);
-        Thread t2 = new T2(data);
-        Thread t3 = new T3(data);
-
-        t1.start();
-        t2.start();
-        t3.start();
-
-        try {
-            t1.join();
-            t2.join();
-            t3.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            System.err.println("Interrupted");
-        }
-        System.out.println("Lab1 finished.");
-    }
-}

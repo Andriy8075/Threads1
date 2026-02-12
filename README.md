@@ -5,19 +5,18 @@ Parallel program with three threads T1, T2, T3 that compute functions F1 (1.10),
 ## Build
 
 ```bash
-javac -encoding UTF-8 src/Lab1.java -d out
-```
+javac -encoding UTF-8 src/*.java -d out
 
 ## Run
 
 - Default (N=4):  
-  `java -cp out Lab1`
+  `java -cp out Main`
 
 - Set N and input mode for large N:  
-  `java -cp out Lab1 3`  
-  `java -cp out Lab1 1000`  
-  `java -cp out Lab1 1000 RANDOM`  
-  `java -cp out Lab1 1000 FILE`
+  `java -cp out Main 3`  
+  `java -cp out Main 1000`  
+  `java -cp out Main 1000 RANDOM`  
+  `java -cp out Main 1000 FILE`
 
 Input modes for N>4: `CONSTANT` (default), `RANDOM`, `FILE`.
 
