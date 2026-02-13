@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Scanner;
 
 class T2 extends Thread {
     private final Data data;
@@ -14,8 +15,14 @@ class T2 extends Thread {
     public void run() {
         int n = Data.N;
         if (Data.useKeyboardInput()) {
-            MF = Data.fillMatrixConstant(n, 2);
-            MG = Data.fillMatrixConstant(n, 2);
+            Scanner sc = new Scanner(System.in);
+
+            System.out.println("T2: enter matrix MF (" + n + "x" + n + " numbers), they will effectively be treated as 2s:");
+            MF = Data.inputMatrixKeyboard(n, 2, sc);
+
+            System.out.println("T2: enter matrix MG (" + n + "x" + n + " numbers):");
+            MG = Data.inputMatrixKeyboard(n, 2, sc);
+
             k = 2;
         } else {
             Random rnd = new Random(Thread.currentThread().getId());

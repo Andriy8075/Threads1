@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 class T3 extends Thread {
     private final Data data;
@@ -15,9 +16,16 @@ class T3 extends Thread {
     public void run() {
         int n = Data.N;
         if (Data.useKeyboardInput()) {
-            S = Data.fillVectorConstant(n, 3);
-            MP = Data.fillMatrixConstant(n, 3);
-            MR = Data.fillMatrixConstant(n, 3);
+            Scanner sc = new Scanner(System.in);
+
+            System.out.println("T3: enter vector S (" + n + " numbers), they will effectively be treated as 3s:");
+            S = Data.inputVectorKeyboard(n, 3, sc);
+
+            System.out.println("T3: enter matrix MP (" + n + "x" + n + " numbers):");
+            MP = Data.inputMatrixKeyboard(n, 3, sc);
+
+            System.out.println("T3: enter matrix MR (" + n + "x" + n + " numbers):");
+            MR = Data.inputMatrixKeyboard(n, 3, sc);
         } else {
             Random rnd = new Random(Thread.currentThread().getId());
             S = Data.inputVectorLarge(n, 3, rnd);
