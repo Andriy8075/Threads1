@@ -11,6 +11,8 @@ class Data {
 
     public static String inputModeLarge = "CONSTANT";
 
+    public static final Object keyboardLock = new Object();
+
     public static double[][] matrixMultiply(double[][] A, double[][] B) {
         int n = A.length;
         double[][] C = new double[n][n];

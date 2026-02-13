@@ -15,15 +15,17 @@ class T2 extends Thread {
     public void run() {
         int n = Data.N;
         if (Data.useKeyboardInput()) {
-            Scanner sc = new Scanner(System.in);
+            synchronized (Data.keyboardLock) {
+                Scanner sc = new Scanner(System.in);
 
-            System.out.println("T2: enter matrix MF (" + n + "x" + n + " numbers), they will effectively be treated as 2s:");
-            MF = Data.inputMatrixKeyboard(n, 2, sc);
+                System.out.println("T2: enter matrix MF (" + n + "x" + n + " numbers), they will effectively be treated as 2s:");
+                MF = Data.inputMatrixKeyboard(n, 2, sc);
 
-            System.out.println("T2: enter matrix MG (" + n + "x" + n + " numbers):");
-            MG = Data.inputMatrixKeyboard(n, 2, sc);
+                System.out.println("T2: enter matrix MG (" + n + "x" + n + " numbers):");
+                MG = Data.inputMatrixKeyboard(n, 2, sc);
 
-            k = 2;
+                k = 2;
+            }
         } else {
             Random rnd = new Random(Thread.currentThread().getId());
             MF = Data.inputMatrixLarge(n, 2, rnd);
